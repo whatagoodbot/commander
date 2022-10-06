@@ -1,12 +1,11 @@
 export default (options) => {
   return {
     topic: 'externalRequest',
-    payload: { 
+    payload: {
       service: 'weather',
       query: {
         search: options.args.join(' ')
-      },
-      meta: options.meta
-   }
+      }
+    }
   }
 }

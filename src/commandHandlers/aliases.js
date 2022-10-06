@@ -1,7 +1,8 @@
 export default (options) => {
   return {
-    topic: 'getAllResponses',
-    payload: { 
+    topic: 'responseReadAll',
+    payload: {
+      category: 'general',
       room: options.room
     }
   }

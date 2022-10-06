@@ -1,17 +1,23 @@
 import { configDb } from '../models/index.js'
 
+import alias from './alias.js'
 import aliases from './aliases.js'
 import dadjoke from './dadjoke.js'
 import giphy from './giphy.js'
 import weather from './weather.js'
+import help from './help.js'
+import addgreeting from './addGreeting.js'
 
 const botConfig = await configDb.get('whatAGoodBot')
 
 const commands = {
+  alias,
   aliases,
   dadjoke,
   giphy,
   weather,
+  help,
+  addgreeting
   // addgreeting: async (options) => {
   //   options.type = 'text'
   //   return await addGreeting(options)
@@ -23,9 +29,6 @@ const commands = {
   // alias: async (options) => {
   //   options.commands = getcommands()
   //   return await addResponse(options)
-  // },
-  // help: async (options) => {
-  //   return { message: `${await stringsDb.get('helpIdentifier')} ${options.botConfig.commandIdentifier}. ${await stringsDb.get('helpCommands')} ${getcommands().join(', ')}` }
   // },
   // leaderboard: async (options) => {
   //   return await playReactionsDb.getReactionTable(options)
@@ -117,7 +120,7 @@ const commands = {
   // down
 }
 
-const getcommands = () => { return Object.keys(commands) }
+const getCommands = () => { return Object.keys(commands) }
 
 const processArguments = (message, separatorPosition) => {
   let args
@@ -129,22 +132,34 @@ const processArguments = (message, separatorPosition) => {
 }
 
 const processCommand = (command, args, options) => {
-  commands[command]({ args, ...options })
+  return commands[command]({ args, ...options })
 }
 
 export const searchForCommand = (options) => {
   if (botConfig.commandIdentifiers.includes(options.message?.substring(0, 1))) {
     const separatorPosition = options.message.indexOf(' ') > 0 ? options.message.indexOf(' ') : options.message.length
-    const command = options.message?.substring(1, separatorPosition)
-
-    if (getcommands().includes(command)) {
+    const command = options.message?.substring(1, separatorPosition).toLowerCase()
+    options.commandList = getCommands()
+    if (options.commandList.includes(command)) {
       const commandActions = processCommand(command, processArguments(options.message, separatorPosition), options)
-
-      client.publish(`${options.topicPrefix}${commandActions.topic}`, JSON.stringify(commandActions.payload))
-      
+      return {
+        topic: commandActions.topic,
+        payload: commandActions.payload
+      }
     } else {
-      // If it's not a command, it will either be a standardmessage or an alias - both of which are handled by responder
-      
+      return {
+        topic: 'responseRead',
+        payload: {
+          key: command,
+          room: options.room,
+          category: 'general'
+        }
+      }
+    }
+  } else {
+    return {
+      topic: 'forwardedChatMessage',
+      payload: options
     }
   }
 }
