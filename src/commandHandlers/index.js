@@ -5,7 +5,7 @@ import giphy from './giphy.js'
 import weather from './weather.js'
 import help from './help.js'
 import addgreeting from './addGreeting.js'
-import repeatingCommands from '../repeatingCommands.js'
+import incrementingCommands from '../incrementingCommands.js'
 import incrementingResponse from './incrementingResponse.js'
 
 const commandList = {
@@ -18,7 +18,7 @@ const commandList = {
   addgreeting
 }
 
-repeatingCommands.forEach(command => {
+incrementingCommands.forEach(command => {
   commandList[command] = incrementingResponse
 })
 
