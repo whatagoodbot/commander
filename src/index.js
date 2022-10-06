@@ -3,21 +3,24 @@ import broker from 'message-broker'
 import { logger } from './utils/logging.js'
 import { metrics } from './utils/metrics.js'
 import { performance } from 'perf_hooks'
+import songPlayed from './commandHandlers/songPlayed.js'
+import { searchForCommand } from './commands.js'
 
-import { searchForCommand } from './commandHandlers/index.js'
-
+const repeaters = {}
 const topicPrefix = `${process.env.NODE_ENV}/`
 
 const subscribe = () => {
-  const topic = 'chatMessage'
-  broker.client.subscribe(`${topicPrefix}${topic}`, (err) => {
-    logger.info(`subscribed to ${topicPrefix}${topic}`)
-    if (err) {
-      logger.error({
-        error: err.toString(),
-        topic
-      })
-    }
+  const topics = ['chatMessage', 'songPlayed']
+  topics.forEach(topic => {
+    broker.client.subscribe(`${topicPrefix}${topic}`, (err) => {
+      logger.info(`subscribed to ${topicPrefix}${topic}`)
+      if (err) {
+        logger.error({
+          error: err.toString(),
+          topic
+        })
+      }
+    })
   })
 }
 
@@ -51,14 +54,18 @@ broker.client.on('message', async (topic, data) => {
     const validatedRequest = broker[topicName].validate(requestPayload)
     if (validatedRequest.errors) throw { message: validatedRequest.errors } // eslint-disable-line
 
-    const processedResponse = searchForCommand(validatedRequest)
-    if (!processedResponse) return
-    const validatedResponse = broker[processedResponse.topic].validate({
-      ...processedResponse.payload,
-      meta: reshapedMeta
-    })
-    if (validatedResponse.errors) throw { message: validatedResponse.errors } // eslint-disable-line
-    broker.client.publish(`${topicPrefix}${processedResponse.topic}`, JSON.stringify(validatedResponse))
+    if (topicName === 'songPlayed') {
+      songPlayed(validatedRequest, repeaters)
+    } else {
+      const processedResponse = searchForCommand(validatedRequest, repeaters)
+      if (!processedResponse) return
+      const validatedResponse = broker[processedResponse.topic].validate({
+        ...processedResponse.payload,
+        meta: reshapedMeta
+      })
+      if (validatedResponse.errors) throw { message: validatedResponse.errors } // eslint-disable-line
+      broker.client.publish(`${topicPrefix}${processedResponse.topic}`, JSON.stringify(validatedResponse))
+    }
 
     metrics.timer('responseTime', performance.now() - startTime, { topic })
   } catch (error) {
