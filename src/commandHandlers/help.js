@@ -1,10 +1,11 @@
 export default (options) => {
+  const commandList = options.internalCommandList.concat(options.externalCommandList)
   return {
     topic: 'responseRead',
     payload: {
       key: 'helpIntro',
       category: 'system',
-      suffix: options.commandList.join(', '),
+      suffix: commandList.join(', '),
       meta: options.meta
     }
   }

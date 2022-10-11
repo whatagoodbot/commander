@@ -53,11 +53,10 @@ broker.client.on('message', async (topic, data) => {
     reshapedMeta = reshapeMeta(requestPayload)
     const validatedRequest = broker[topicName].validate(requestPayload)
     if (validatedRequest.errors) throw { message: validatedRequest.errors } // eslint-disable-line
-
     if (topicName === 'songPlayed') {
       songPlayed(validatedRequest, repeaters)
     } else {
-      const processedResponse = searchForCommand(validatedRequest, repeaters)
+      const processedResponse = await searchForCommand(validatedRequest, repeaters)
       if (!processedResponse) return
       const validatedResponse = broker[processedResponse.topic].validate({
         ...processedResponse.payload,

@@ -1,9 +1,20 @@
 import { configDb } from './models/index.js'
 
-import commands from './commandHandlers/index.js'
-const botConfig = await configDb.get('whatAGoodBot')
+import alias from './commandHandlers/alias.js'
+import aliases from './commandHandlers/aliases.js'
+import help from './commandHandlers/help.js'
+import addgreeting from './commandHandlers/addGreeting.js'
+import incrementingResponse from './commandHandlers/incrementingResponse.js'
+import { getExternalCommandList, processExternalCommand } from './commandHandlers/externallyProcessed.js'
 
-const getCommands = () => { return Object.keys(commands) }
+const internalCommands = {
+  alias,
+  aliases,
+  help,
+  addgreeting
+}
+
+const getCommands = (commands) => { return Object.keys(commands) }
 
 const processArguments = (message, separatorPosition) => {
   let args
@@ -15,16 +26,36 @@ const processArguments = (message, separatorPosition) => {
 }
 
 const processCommand = (command, args, options, repeaters) => {
-  return commands[command]({ args, ...options }, repeaters)
+  return internalCommands[command]({ args, ...options }, repeaters)
 }
 
-export const searchForCommand = (options, repeaters) => {
+export const searchForCommand = async (options, repeaters) => {
+  const botConfig = await configDb.get(options.room)
   if (botConfig.commandIdentifiers.includes(options.message?.substring(0, 1))) {
     const separatorPosition = options.message.indexOf(' ') > 0 ? options.message.indexOf(' ') : options.message.length
     options.command = options.message?.substring(1, separatorPosition).toLowerCase()
-    options.commandList = getCommands()
-    if (options.commandList.includes(options.command)) {
-      const commandActions = processCommand(options.command, processArguments(options.message, separatorPosition), options, repeaters)
+    const externalCommands = await getExternalCommandList()
+    options.internalCommandList = getCommands(internalCommands)
+    options.externalCommandList = getCommands(externalCommands)
+    if (options.internalCommandList.includes(options.command)) {
+      const commandActions = processCommand(options.command, processArguments(options.message, separatorPosition), options)
+      if (commandActions) {
+        return {
+          topic: commandActions.topic,
+          payload: commandActions.payload
+        }
+      }
+    } else if (options.externalCommandList.includes(options.command) && externalCommands[options.command].topic === 'incrementingResponse') {
+      const args = processArguments(options.message, separatorPosition)
+      const commandActions = incrementingResponse({ args, ...options }, repeaters)
+      if (commandActions) {
+        return {
+          topic: commandActions.topic,
+          payload: commandActions.payload
+        }
+      }
+    } else if (options.externalCommandList.includes(options.command)) {
+      const commandActions = processExternalCommand(externalCommands[options.command], processArguments(options.message, separatorPosition))
       if (commandActions) {
         return {
           topic: commandActions.topic,

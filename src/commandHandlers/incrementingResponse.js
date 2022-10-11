@@ -1,6 +1,5 @@
 
 const repeater = (command, slug, userId, repeaters) => {
-  console.log('set', repeaters)
   if (!repeaters[slug]) {
     repeaters[slug] = {}
   }
