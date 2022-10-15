@@ -58,12 +58,13 @@ broker.client.on('message', async (topic, data) => {
     } else {
       const processedResponse = await searchForCommand(validatedRequest, repeaters)
       if (!processedResponse) return
-      processedResponse.messageId = reshapedMeta.messageId
+      processedResponse.payload.messageId = reshapedMeta.messageId
       const validatedResponse = broker[processedResponse.topic].validate({
         ...processedResponse.payload,
         meta: reshapedMeta
       })
       if (validatedResponse.errors) throw { message: validatedResponse.errors } // eslint-disable-line
+      console.log(`${topicPrefix}${processedResponse.topic}`)
       broker.client.publish(`${topicPrefix}${processedResponse.topic}`, JSON.stringify(validatedResponse))
     }
 
@@ -72,6 +73,7 @@ broker.client.on('message', async (topic, data) => {
     logger.error(error.message)
     requestPayload.error = error.message
     const validatedResponse = broker.responseRead.validate({
+      messageId: reshapedMeta.messageId,
       key: 'somethingWentWrong',
       category: 'system',
       meta: reshapedMeta
