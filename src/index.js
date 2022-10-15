@@ -45,10 +45,10 @@ broker.client.on('error', (err) => {
 broker.client.on('message', async (topic, data) => {
   const startTime = performance.now()
   const topicName = topic.substring(topicPrefix.length)
+  metrics.count('receivedMessage', { topicName })
   let requestPayload
   let reshapedMeta
   try {
-    metrics.count('receivedMessage', { topicName })
     requestPayload = JSON.parse(data.toString())
     reshapedMeta = reshapeMeta(requestPayload)
     const validatedRequest = broker[topicName].validate(requestPayload)
@@ -58,6 +58,7 @@ broker.client.on('message', async (topic, data) => {
     } else {
       const processedResponse = await searchForCommand(validatedRequest, repeaters)
       if (!processedResponse) return
+      processedResponse.messageId = reshapedMeta.messageId
       const validatedResponse = broker[processedResponse.topic].validate({
         ...processedResponse.payload,
         meta: reshapedMeta
@@ -68,7 +69,7 @@ broker.client.on('message', async (topic, data) => {
 
     metrics.timer('responseTime', performance.now() - startTime, { topic })
   } catch (error) {
-    console.log(error.message)
+    logger.error(error.message)
     requestPayload.error = error.message
     const validatedResponse = broker.responseRead.validate({
       key: 'somethingWentWrong',
