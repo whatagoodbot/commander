@@ -64,7 +64,6 @@ broker.client.on('message', async (topic, data) => {
         meta: reshapedMeta
       })
       if (validatedResponse.errors) throw { message: validatedResponse.errors } // eslint-disable-line
-      console.log(`${topicPrefix}${processedResponse.topic}`)
       broker.client.publish(`${topicPrefix}${processedResponse.topic}`, JSON.stringify(validatedResponse))
     }
 
