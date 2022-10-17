@@ -8,10 +8,10 @@ import incrementingResponse from './commandHandlers/incrementingResponse.js'
 import { getExternalCommandList, processExternalCommand } from './commandHandlers/externallyProcessed.js'
 
 const internalCommands = {
+  addgreeting,
   alias,
   aliases,
-  help,
-  addgreeting
+  help
 }
 
 const getCommands = (commands) => { return Object.keys(commands) }
