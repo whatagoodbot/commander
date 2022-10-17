@@ -13,7 +13,8 @@ export const getExternalCommandList = async () => {
     commandList[availableCommand.name] = {
       topic: availableCommand.topic,
       payload: {
-        service: availableCommand.name,
+        name: availableCommand.name,
+        service: availableCommand.service,
         query: {}
       }
     }
