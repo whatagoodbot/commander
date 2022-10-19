@@ -4,14 +4,16 @@ import alias from './commandHandlers/alias.js'
 import aliases from './commandHandlers/aliases.js'
 import help from './commandHandlers/help.js'
 import addgreeting from './commandHandlers/addGreeting.js'
+import addroomgreeting from './commandHandlers/addRoomGreeting.js'
 import incrementingResponse from './commandHandlers/incrementingResponse.js'
 import { getExternalCommandList, processExternalCommand } from './commandHandlers/externallyProcessed.js'
 
 const internalCommands = {
+  addgreeting,
+  addroomgreeting,
   alias,
   aliases,
-  help,
-  addgreeting
+  help
 }
 
 const getCommands = (commands) => { return Object.keys(commands) }
