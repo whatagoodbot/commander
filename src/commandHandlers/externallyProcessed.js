@@ -2,7 +2,7 @@ import { commandsDb } from '../models/index.js'
 
 export const processExternalCommand = (command, args) => {
   const response = command
-  if (args) response.payload.query.search = args?.join(' ')
+  if (args) response.payload.arguments = args?.join(' ')
   return response
 }
 
@@ -15,7 +15,7 @@ export const getExternalCommandList = async () => {
       payload: {
         name: availableCommand.name,
         service: availableCommand.service,
-        query: {}
+        arguments: {}
       }
     }
   })
