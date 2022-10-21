@@ -18,14 +18,13 @@ const repeater = (command, slug, userId, repeaters) => {
 }
 
 export default (payload, repeaters) => {
-  const position = repeater(payload.command, payload.room, payload.sender, repeaters)
+  const position = repeater(payload.command, payload.room.slug, payload.sender, repeaters)
   if (position >= 0) {
     return {
       topic: 'responseRead',
       payload: {
         category: 'system',
         key: payload.command,
-        room: payload.room,
         position
       }
     }
