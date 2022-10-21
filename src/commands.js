@@ -6,14 +6,17 @@ import help from './commandHandlers/help.js'
 import addgreeting from './commandHandlers/addGreeting.js'
 import addroomgreeting from './commandHandlers/addRoomGreeting.js'
 import incrementingResponse from './commandHandlers/incrementingResponse.js'
+import mock from './commandHandlers/mock.js'
 import { getExternalCommandList, processExternalCommand } from './commandHandlers/externallyProcessed.js'
 
+const lastMessage = {}
 const internalCommands = {
   addgreeting,
   addroomgreeting,
   alias,
   aliases,
-  help
+  help,
+  mock
 }
 
 const getCommands = (commands) => { return Object.keys(commands) }
@@ -40,6 +43,7 @@ export const searchForCommand = async (options, repeaters) => {
     options.internalCommandList = getCommands(internalCommands)
     options.externalCommandList = getCommands(externalCommands)
     if (options.internalCommandList.includes(options.command)) {
+      options.lastMessage = lastMessage[options.room.slug]
       const commandActions = processCommand(options.command, processArguments(options.chatMessage, separatorPosition), options)
       if (commandActions) {
         return {
@@ -75,6 +79,7 @@ export const searchForCommand = async (options, repeaters) => {
       }
     }
   } else {
+    lastMessage[options.room.slug] = options.chatMessage
     return {
       topic: 'forwardedChatMessage',
       payload: options
