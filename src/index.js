@@ -24,12 +24,6 @@ const subscribe = () => {
   })
 }
 
-const reshapeMeta = (requestPayload) => {
-  const sentMeta = requestPayload?.meta
-  delete requestPayload?.meta
-  return { ...requestPayload, ...sentMeta }
-}
-
 if (broker.client.connected) {
   subscribe()
 } else {
@@ -47,10 +41,8 @@ broker.client.on('message', async (topic, data) => {
   const topicName = topic.substring(topicPrefix.length)
   metrics.count('receivedMessage', { topicName })
   let requestPayload
-  let reshapedMeta
   try {
     requestPayload = JSON.parse(data.toString())
-    reshapedMeta = reshapeMeta(requestPayload)
     const validatedRequest = broker[topicName].validate(requestPayload)
     if (validatedRequest.errors) throw { message: validatedRequest.errors } // eslint-disable-line
     if (topicName === 'songPlayed') {
@@ -58,24 +50,25 @@ broker.client.on('message', async (topic, data) => {
     } else {
       const processedResponse = await searchForCommand(validatedRequest, repeaters)
       if (!processedResponse) return
-      processedResponse.payload.messageId = reshapedMeta.messageId
       const validatedResponse = broker[processedResponse.topic].validate({
-        ...processedResponse.payload,
-        meta: reshapedMeta
+        ...validatedRequest,
+        ...processedResponse.payload
       })
       if (validatedResponse.errors) throw { message: validatedResponse.errors } // eslint-disable-line
+      logger.debug(`Publising ${topicPrefix}${processedResponse.topic}`)
       broker.client.publish(`${topicPrefix}${processedResponse.topic}`, JSON.stringify(validatedResponse))
     }
 
     metrics.timer('responseTime', performance.now() - startTime, { topic })
   } catch (error) {
     logger.error(error.message)
-    requestPayload.error = error.message
+    requestPayload = requestPayload || {
+      messageId: 'ORPHANED'
+    }
     const validatedResponse = broker.responseRead.validate({
-      messageId: reshapedMeta.messageId,
       key: 'somethingWentWrong',
       category: 'system',
-      meta: reshapedMeta
+      ...requestPayload
     })
     metrics.count('error', { topicName })
     broker.client.publish(`${topicPrefix}responseRead`, JSON.stringify(validatedResponse))

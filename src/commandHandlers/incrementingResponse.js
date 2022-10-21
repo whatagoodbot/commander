@@ -25,7 +25,6 @@ export default (payload, repeaters) => {
       payload: {
         category: 'system',
         key: payload.command,
-        room: payload.room,
         position
       }
     }

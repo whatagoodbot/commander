@@ -7,8 +7,7 @@ export default (options) => {
       return {
         topic: 'responseAdd',
         payload: {
-          room: options.room,
-          key: options.room,
+          key: options.room.slug,
           type,
           value,
           category: 'roomGreeting'

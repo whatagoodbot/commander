@@ -15,7 +15,7 @@ export const getExternalCommandList = async () => {
       payload: {
         name: availableCommand.name,
         service: availableCommand.service,
-        arguments: {}
+        arguments: undefined
       }
     }
   })

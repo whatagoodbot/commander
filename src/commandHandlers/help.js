@@ -5,8 +5,7 @@ export default (options) => {
     payload: {
       key: 'helpIntro',
       category: 'system',
-      suffix: commandList.join(', '),
-      meta: options.meta
+      suffix: commandList.join(', ')
     }
   }
 }

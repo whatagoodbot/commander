@@ -18,7 +18,6 @@ export default (options) => {
       return {
         topic: 'responseAdd',
         payload: {
-          room: options.room,
           key,
           type,
           value,
