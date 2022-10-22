@@ -7,6 +7,7 @@ import addgreeting from './commandHandlers/addGreeting.js'
 import addroomgreeting from './commandHandlers/addRoomGreeting.js'
 import incrementingResponse from './commandHandlers/incrementingResponse.js'
 import mock from './commandHandlers/mock.js'
+import wut from './commandHandlers/wut.js'
 import { getExternalCommandList, processExternalCommand } from './commandHandlers/externallyProcessed.js'
 
 const lastMessage = {}
@@ -16,7 +17,8 @@ const internalCommands = {
   alias,
   aliases,
   help,
-  mock
+  mock,
+  wut
 }
 
 const getCommands = (commands) => { return Object.keys(commands) }
