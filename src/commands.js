@@ -8,6 +8,8 @@ import addroomgreeting from './commandHandlers/addRoomGreeting.js'
 import incrementingResponse from './commandHandlers/incrementingResponse.js'
 import mock from './commandHandlers/mock.js'
 import wut from './commandHandlers/wut.js'
+import translate from './commandHandlers/translate.js'
+import translateto from './commandHandlers/translateto.js'
 import { getExternalCommandList, processExternalCommand } from './commandHandlers/externallyProcessed.js'
 
 const lastMessage = {}
@@ -18,6 +20,8 @@ const internalCommands = {
   aliases,
   help,
   mock,
+  translate,
+  translateto,
   wut
 }
 
@@ -46,7 +50,7 @@ export const searchForCommand = async (options, repeaters) => {
     options.externalCommandList = getCommands(externalCommands)
     if (options.internalCommandList.includes(options.command)) {
       options.lastMessage = lastMessage[options.room.slug]
-      const commandActions = processCommand(options.command, processArguments(options.chatMessage, separatorPosition), options)
+      const commandActions = await processCommand(options.command, processArguments(options.chatMessage, separatorPosition), options)
       if (commandActions) {
         return {
           topic: commandActions.topic,
