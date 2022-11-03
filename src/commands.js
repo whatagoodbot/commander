@@ -1,5 +1,3 @@
-import { configDb } from './models/index.js'
-
 import alias from './commandHandlers/alias.js'
 import aliases from './commandHandlers/aliases.js'
 import help from './commandHandlers/help.js'
