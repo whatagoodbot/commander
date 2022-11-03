@@ -6,9 +6,9 @@ export const processExternalCommand = (command, args) => {
   return response
 }
 
-export const getExternalCommandList = async () => {
+export const getExternalCommandList = async (room) => {
   const commandList = {}
-  const availableCommands = await commandsDb.get()
+  const availableCommands = await commandsDb.get(room)
   availableCommands.forEach(availableCommand => {
     commandList[availableCommand.name] = {
       topic: availableCommand.topic,

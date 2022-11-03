@@ -1,6 +1,6 @@
 {
-  "name": "commander",
-  "version": "3.1.1",
+  "name": "service-command-reader",
+  "version": "3.1.2",
   "description": "",
   "main": "index.js",
   "type": "module",
@@ -15,15 +15,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/whatagoodbot/commander.git"
+    "url": "git+https://github.com/whatagoodbot/service-command-reader.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/whatagoodbot/commander/issues"
+    "url": "https://github.com/whatagoodbot/service-command-reader/issues"
   },
-  "homepage": "https://github.com/whatagoodbot/commander#readme",
+  "homepage": "https://github.com/whatagoodbot/service-command-reader#readme",
   "standard": {
     "env": [
       "mocha"

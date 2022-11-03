@@ -8,6 +8,7 @@ import addroomgreeting from './commandHandlers/addRoomGreeting.js'
 import incrementingResponse from './commandHandlers/incrementingResponse.js'
 import mock from './commandHandlers/mock.js'
 import wut from './commandHandlers/wut.js'
+import slots from './commandHandlers/slots.js'
 import translate from './commandHandlers/translate.js'
 import translateto from './commandHandlers/translateto.js'
 import { getExternalCommandList, processExternalCommand } from './commandHandlers/externallyProcessed.js'
@@ -24,6 +25,9 @@ const internalCommands = {
   translateto,
   wut
 }
+const hiddenCommands = {
+  slots
+}
 
 const getCommands = (commands) => { return Object.keys(commands) }
 
@@ -36,16 +40,15 @@ const processArguments = (message, separatorPosition) => {
   return args
 }
 
-const processCommand = (command, args, options, repeaters) => {
-  return internalCommands[command]({ args, ...options }, repeaters)
+const processCommand = (command, args, options, commandList = internalCommands) => {
+  return commandList[command]({ args, ...options })
 }
 
 export const searchForCommand = async (options, repeaters) => {
-  const botConfig = await configDb.get(options.room.slug)
-  if (botConfig.commandIdentifiers.includes(options.chatMessage?.substring(0, 1))) {
+  if (options.room.commandIdentifiers.includes(options.chatMessage?.substring(0, 1))) {
     const separatorPosition = options.chatMessage.indexOf(' ') > 0 ? options.chatMessage.indexOf(' ') : options.chatMessage.length
     options.command = options.chatMessage?.substring(1, separatorPosition).toLowerCase()
-    const externalCommands = await getExternalCommandList()
+    const externalCommands = await getExternalCommandList(options.room.slug)
     options.internalCommandList = getCommands(internalCommands)
     options.externalCommandList = getCommands(externalCommands)
     if (options.internalCommandList.includes(options.command)) {
@@ -60,6 +63,15 @@ export const searchForCommand = async (options, repeaters) => {
     } else if (options.externalCommandList.includes(options.command) && externalCommands[options.command].topic === 'incrementingResponse') {
       const args = processArguments(options.chatMessage, separatorPosition)
       const commandActions = incrementingResponse({ args, ...options }, repeaters)
+      if (commandActions) {
+        return {
+          topic: commandActions.topic,
+          payload: commandActions.payload
+        }
+      }
+    } else if (options.externalCommandList.includes(options.command) && externalCommands[options.command].topic === 'internalRequest') {
+      options.lastMessage = lastMessage[options.room.slug]
+      const commandActions = await processCommand(options.command, processArguments(options.chatMessage, separatorPosition), options, hiddenCommands)
       if (commandActions) {
         return {
           topic: commandActions.topic,
