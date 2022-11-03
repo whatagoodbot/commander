@@ -1,9 +1,8 @@
 export default (options) => {
   if (options.args) {
-    const key = options.args.shift()
+    const key = options.args.shift().replace(/@/g, '')
     const type = options.args.shift()
     const value = options.args.join(' ')
-
     if (['image', 'text'].includes(type) && key && value) {
       return {
         topic: 'responseAdd',
