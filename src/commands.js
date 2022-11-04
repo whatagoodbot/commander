@@ -1,7 +1,7 @@
 import alias from './commandHandlers/alias.js'
 import aliases from './commandHandlers/aliases.js'
 import help from './commandHandlers/help.js'
-import addgreeting from './commandHandlers/addUserGreeting.js'
+import addusergreeting from './commandHandlers/addUserGreeting.js'
 import addroomgreeting from './commandHandlers/addRoomGreeting.js'
 import incrementingResponse from './commandHandlers/incrementingResponse.js'
 import mock from './commandHandlers/mock.js'
@@ -13,7 +13,7 @@ import { getExternalCommandList, processExternalCommand } from './commandHandler
 
 const lastMessage = {}
 const internalCommands = {
-  addgreeting,
+  addusergreeting,
   addroomgreeting,
   alias,
   aliases,
@@ -43,6 +43,7 @@ const processCommand = (command, args, options, commandList = internalCommands) 
 }
 
 export const searchForCommand = async (options, repeaters) => {
+  console.log(options.room)
   if (options.room.commandIdentifiers.includes(options.chatMessage?.substring(0, 1))) {
     const separatorPosition = options.chatMessage.indexOf(' ') > 0 ? options.chatMessage.indexOf(' ') : options.chatMessage.length
     options.command = options.chatMessage?.substring(1, separatorPosition).toLowerCase()
