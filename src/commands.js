@@ -1,7 +1,7 @@
 import alias from './commandHandlers/alias.js'
 import aliases from './commandHandlers/aliases.js'
 import help from './commandHandlers/help.js'
-import addgreeting from './commandHandlers/addUserGreeting.js'
+import addusergreeting from './commandHandlers/addUserGreeting.js'
 import addroomgreeting from './commandHandlers/addRoomGreeting.js'
 import incrementingResponse from './commandHandlers/incrementingResponse.js'
 import mock from './commandHandlers/mock.js'
@@ -13,7 +13,7 @@ import { getExternalCommandList, processExternalCommand } from './commandHandler
 
 const lastMessage = {}
 const internalCommands = {
-  addgreeting,
+  addusergreeting,
   addroomgreeting,
   alias,
   aliases,
