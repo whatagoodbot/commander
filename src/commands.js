@@ -5,6 +5,7 @@ import help from './commandHandlers/help.js'
 import addusergreeting from './commandHandlers/addUserGreeting.js'
 import addroomgreeting from './commandHandlers/addRoomGreeting.js'
 import incrementingResponse from './commandHandlers/incrementingResponse.js'
+import magic8ball from './commandHandlers/magic8ball.js'
 import mock from './commandHandlers/mock.js'
 import wut from './commandHandlers/wut.js'
 import slots from './commandHandlers/slots.js'
@@ -20,6 +21,7 @@ const internalCommands = {
   aliases,
   dice,
   help,
+  magic8ball,
   mock,
   translate,
   translateto,

@@ -1,5 +1,6 @@
 import { expect } from 'chai'
 import dice from '../src/commandHandlers/dice.js'
+import magic8ball, { responses } from '../src/commandHandlers/magic8ball.js'
 
 describe('networking', function () {
   it('should return a function to add text responder', () => {
@@ -35,5 +36,10 @@ describe('test commands', function () {
     expect(n3).to.be.a('number')
     expect(n3).to.be.greaterThanOrEqual(6)
     expect(n3).to.be.lessThanOrEqual(36)
+  })
+
+  it('Should handle magic8ball', () => {
+    const response = magic8ball()
+    expect(response).to.have.nested.property('payload.message').to.be.oneOf(responses)
   })
 })

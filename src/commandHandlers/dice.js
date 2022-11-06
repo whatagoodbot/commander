@@ -1,8 +1,4 @@
-function getRandomIntInclusive (min, max) {
-  min = Math.ceil(min)
-  max = Math.floor(max)
-  return Math.floor(Math.random() * (max - min + 1)) + min
-}
+import { getRandomIntInclusive } from '../libs/utils.js'
 
 export default (options) => {
   const input = options.args.length > 0 ? options.args.join(' ') : '1d6'
