@@ -1,5 +1,6 @@
 import alias from './commandHandlers/alias.js'
 import aliases from './commandHandlers/aliases.js'
+import dice from './commandHandlers/dice.js'
 import help from './commandHandlers/help.js'
 import addusergreeting from './commandHandlers/addUserGreeting.js'
 import addroomgreeting from './commandHandlers/addRoomGreeting.js'
@@ -17,6 +18,7 @@ const internalCommands = {
   addroomgreeting,
   alias,
   aliases,
+  dice,
   help,
   mock,
   translate,
