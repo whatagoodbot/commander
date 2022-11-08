@@ -1,7 +1,7 @@
 export default (options) => {
   if (options.args) {
     const key = options.args.shift()
-    const type = options.args.shift()
+    const type = options.client === 'goodbot-ttl' ? options.args.shift() : 'text'
     const value = options.args.join(' ')
 
     if (options.internalCommandList.includes(key) || options.externalCommandList.includes(key)) {

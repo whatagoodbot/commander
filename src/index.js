@@ -1,4 +1,4 @@
-import broker from 'message-broker'
+import broker from '@whatagoodbot/mqtt'
 
 import { logger } from './utils/logging.js'
 import { metrics } from './utils/metrics.js'

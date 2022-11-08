@@ -1,6 +1,6 @@
 export default (options) => {
   if (options.args) {
-    const type = options.args.shift()
+    const type = options.client === 'goodbot-ttl' ? options.args.shift() : 'text'
     const value = options.args.join(' ')
 
     if (['image', 'text'].includes(type) && value) {

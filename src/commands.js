@@ -4,6 +4,7 @@ import dice from './commandHandlers/dice.js'
 import help from './commandHandlers/help.js'
 import addusergreeting from './commandHandlers/addUserGreeting.js'
 import addroomgreeting from './commandHandlers/addRoomGreeting.js'
+import deleteroomgreetings from './commandHandlers/deleteRoomGreetings.js'
 import incrementingResponse from './commandHandlers/incrementingResponse.js'
 import magic8ball from './commandHandlers/magic8ball.js'
 import mock from './commandHandlers/mock.js'
@@ -20,6 +21,7 @@ const internalCommands = {
   alias,
   aliases,
   dice,
+  deleteroomgreetings,
   help,
   magic8ball,
   mock,
