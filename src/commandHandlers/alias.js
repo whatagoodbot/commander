@@ -5,17 +5,17 @@ export default (options) => {
     const value = options.args.join(' ')
 
     if (options.internalCommandList.includes(key) || options.externalCommandList.includes(key)) {
-      return {
+      return [{
         topic: 'responseRead',
         payload: {
           category: 'system',
           key: 'aliasConflict'
         }
-      }
+      }]
     }
 
     if (['image', 'text'].includes(type) && key && value) {
-      return {
+      return [{
         topic: 'responseAdd',
         payload: {
           key,
@@ -23,23 +23,23 @@ export default (options) => {
           value,
           category: 'general'
         }
-      }
+      }]
     } else {
-      return {
+      return [{
         topic: 'responseRead',
         payload: {
           category: 'system',
           key: 'aliasError'
         }
-      }
+      }]
     }
   } else {
-    return {
+    return [{
       topic: 'responseRead',
       payload: {
         category: 'system',
         key: 'aliasError'
       }
-    }
+    }]
   }
 }

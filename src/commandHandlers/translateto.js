@@ -7,13 +7,13 @@ export default async (options) => {
     target = options.args.shift().toLowerCase()
     q = options.args.join(' ') || options.lastMessage
   } else {
-    return {
+    return [{
       topic: 'responseRead',
       payload: {
         category: 'system',
         key: 'translateToError'
       }
-    }
+    }]
   }
 
   const query = {
@@ -23,10 +23,10 @@ export default async (options) => {
   }
   const url = buildUrl(process.env.TRANSLATE_URL, ['translate'], null, 'http')
   const response = await makeRequest(url, { method: 'POST', body: JSON.stringify(query) })
-  return {
+  return [{
     topic: 'broadcast',
     payload: {
       message: `"${q}" in ${target} is "${response.translatedText}"`
     }
-  }
+  }]
 }

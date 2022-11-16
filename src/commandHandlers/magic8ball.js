@@ -26,10 +26,10 @@ export const responses = [
 export default () => {
   const responseIndex = getRandomIntInclusive(0, responses.length - 1)
 
-  return {
+  return [{
     topic: 'broadcast',
     payload: {
       message: responses[responseIndex]
     }
-  }
+  }]
 }

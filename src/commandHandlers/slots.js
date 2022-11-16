@@ -1,8 +1,8 @@
 export default (options) => {
-  return {
+  return [{
     topic: 'broadcast',
     payload: {
       message: 'Who you calling a slut?????'
     }
-  }
+  }]
 }

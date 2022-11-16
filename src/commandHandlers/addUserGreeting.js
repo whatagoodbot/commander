@@ -4,7 +4,7 @@ export default (options) => {
     const type = options.client === 'goodbot-ttl' ? options.args.shift() : 'text'
     const value = options.args.join(' ')
     if (['image', 'text'].includes(type) && key && value) {
-      return {
+      return [{
         topic: 'responseAdd',
         payload: {
           key,
@@ -12,23 +12,23 @@ export default (options) => {
           value,
           category: 'userGreeting'
         }
-      }
+      }]
     } else {
-      return {
+      return [{
         topic: 'responseRead',
         payload: {
           category: 'system',
           key: 'addGreetingError'
         }
-      }
+      }]
     }
   } else {
-    return {
+    return [{
       topic: 'responseRead',
       payload: {
         category: 'system',
         key: 'addGreetingError'
       }
-    }
+    }]
   }
 }

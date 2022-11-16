@@ -10,10 +10,10 @@ export default (options) => {
   const total = getRandomIntInclusive(die, sides * die)
   const message = 'You rolled: ' + total
 
-  return {
+  return [{
     topic: 'broadcast',
     payload: {
       message
     }
-  }
+  }]
 }

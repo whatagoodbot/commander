@@ -1,10 +1,10 @@
 export default (options) => {
   console.log('command understood')
-  return {
+  return [{
     topic: 'responseDelete',
     payload: {
       category: 'roomGreeting',
       key: options.room.slug
     }
-  }
+  }]
 }
