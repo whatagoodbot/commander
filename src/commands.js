@@ -59,52 +59,47 @@ export const searchForCommand = async (options, repeaters) => {
       options.lastMessage = lastMessage[options.room.slug]
       const commandActions = await processCommand(options.command, processArguments(options.chatMessage, separatorPosition), options)
       if (commandActions) {
-        return {
+        return [{
           topic: commandActions.topic,
           payload: commandActions.payload
-        }
+        }]
       }
     } else if (options.externalCommandList.includes(options.command) && externalCommands[options.command].topic === 'incrementingResponse') {
       const args = processArguments(options.chatMessage, separatorPosition)
       const commandActions = incrementingResponse({ args, ...options }, repeaters)
-      if (commandActions) {
-        return {
-          topic: commandActions.topic,
-          payload: commandActions.payload
-        }
-      }
+      if (commandActions) return commandActions
     } else if (options.externalCommandList.includes(options.command) && externalCommands[options.command].topic === 'internalRequest') {
       options.lastMessage = lastMessage[options.room.slug]
       const commandActions = await processCommand(options.command, processArguments(options.chatMessage, separatorPosition), options, hiddenCommands)
       if (commandActions) {
-        return {
+        return [{
           topic: commandActions.topic,
           payload: commandActions.payload
-        }
+        }]
       }
     } else if (options.externalCommandList.includes(options.command)) {
       const commandActions = processExternalCommand(externalCommands[options.command], processArguments(options.chatMessage, separatorPosition))
       if (commandActions) {
-        return {
+        return [{
           topic: commandActions.topic,
           payload: commandActions.payload
-        }
+        }]
       }
     } else {
-      return {
+      return [{
         topic: 'responseRead',
         payload: {
           key: options.command,
           room: options.room,
           category: 'general'
         }
-      }
+      }]
     }
   } else {
     lastMessage[options.room.slug] = options.chatMessage
-    return {
+    return [{
       topic: 'forwardedChatMessage',
       payload: options
-    }
+    }]
   }
 }
