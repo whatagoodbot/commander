@@ -28,14 +28,16 @@ export default (payload, repeaters) => {
         position
       }
     }]
-    if (position === 2) reply.push({
-      topic: 'externalRequest',
-      payload: {
-        name: 'botVote',
-        service: 'RVRB',
-        arguments: undefined
-      }      
-    })
+    if (position === 2) {
+      reply.push({
+        topic: 'externalRequest',
+        payload: {
+          name: 'botVote',
+          service: 'RVRB',
+          arguments: undefined
+        }
+      })
+    }
     return reply
   }
 }

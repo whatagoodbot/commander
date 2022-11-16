@@ -50,7 +50,7 @@ broker.client.on('message', async (topic, data) => {
     } else {
       const processedResponses = await searchForCommand(validatedRequest, repeaters)
       if (!processedResponses || !processedResponses.length) return
-      for (const current in processedResponses) {  
+      for (const current in processedResponses) {
         const processedResponse = processedResponses[current]
         const validatedResponse = broker[processedResponse.topic].validate({
           ...validatedRequest,
