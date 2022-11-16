@@ -15,10 +15,10 @@ export default async (options) => {
   }
   const url = buildUrl(process.env.TRANSLATE_URL, ['translate'], null, 'http')
   const response = await makeRequest(url, { method: 'POST', body: JSON.stringify(query) })
-  return {
+  return [{
     topic: 'broadcast',
     payload: {
       message: `"${q}" in ${target} is "${response.translatedText}"`
     }
-  }
+  }]
 }

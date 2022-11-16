@@ -8,10 +8,10 @@ export default (options) => {
       .join('')
   )
     .join(' ')
-  return {
+  return [{
     topic: 'broadcast',
     payload: {
       message
     }
-  }
+  }]
 }

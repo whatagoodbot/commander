@@ -1,8 +1,8 @@
 export default (options) => {
-  return {
+  return [{
     topic: 'responseReadAll',
     payload: {
       category: 'general'
     }
-  }
+  }]
 }

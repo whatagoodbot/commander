@@ -4,7 +4,7 @@ export default (options) => {
     const value = options.args.join(' ')
 
     if (['image', 'text'].includes(type) && value) {
-      return {
+      return [{
         topic: 'responseAdd',
         payload: {
           key: options.room.slug,
@@ -12,23 +12,23 @@ export default (options) => {
           value,
           category: 'roomGreeting'
         }
-      }
+      }]
     } else {
-      return {
+      return [{
         topic: 'responseRead',
         payload: {
           category: 'system',
           key: 'addRoomGreetingError'
         }
-      }
+      }]
     }
   } else {
-    return {
+    return [{
       topic: 'responseRead',
       payload: {
         category: 'system',
         key: 'addRoomGreetingError'
       }
-    }
+    }]
   }
 }

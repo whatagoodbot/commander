@@ -48,16 +48,19 @@ broker.client.on('message', async (topic, data) => {
     if (topicName === 'songPlayed') {
       songPlayed(validatedRequest, repeaters)
     } else {
-      const processedResponse = await searchForCommand(validatedRequest, repeaters)
-      if (!processedResponse) return
-      const validatedResponse = broker[processedResponse.topic].validate({
-        ...validatedRequest,
-        ...processedResponse.payload
-      })
-      if (validatedResponse.errors) throw { message: validatedResponse.errors } // eslint-disable-line
-      logger.debug(`Publising ${topicPrefix}${processedResponse.topic}`)
-      if (process.env.FULLDEBUG) return
-      broker.client.publish(`${topicPrefix}${processedResponse.topic}`, JSON.stringify(validatedResponse))
+      const processedResponses = await searchForCommand(validatedRequest, repeaters)
+      if (!processedResponses || !processedResponses.length) return
+      for (const current in processedResponses) {
+        const processedResponse = processedResponses[current]
+        const validatedResponse = broker[processedResponse.topic].validate({
+          ...validatedRequest,
+          ...processedResponse.payload
+        })
+        if (validatedResponse.errors) throw { message: validatedResponse.errors } // eslint-disable-line
+        logger.debug(`Publising ${topicPrefix}${processedResponse.topic}`)
+        if (process.env.FULLDEBUG) return
+        broker.client.publish(`${topicPrefix}${processedResponse.topic}`, JSON.stringify(validatedResponse))
+      }
     }
 
     metrics.timer('responseTime', performance.now() - startTime, { topic })
