@@ -20,7 +20,7 @@ const repeater = (command, slug, userId, repeaters) => {
 export default (payload, repeaters) => {
   const position = repeater(payload.command, payload.room.slug, payload.sender, repeaters)
   if (position >= 0) {
-    const reply = [{
+    const replies = [{
       topic: 'responseRead',
       payload: {
         category: 'system',
@@ -29,7 +29,7 @@ export default (payload, repeaters) => {
       }
     }]
     if (position === 2) {
-      reply.push({
+      replies.push({
         topic: 'externalRequest',
         payload: {
           name: 'botVote',
@@ -38,6 +38,6 @@ export default (payload, repeaters) => {
         }
       })
     }
-    return reply
+    return replies
   }
 }
