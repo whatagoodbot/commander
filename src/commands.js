@@ -58,12 +58,7 @@ export const searchForCommand = async (options, repeaters) => {
     if (options.internalCommandList.includes(options.command)) {
       options.lastMessage = lastMessage[options.room.slug]
       const commandActions = await processCommand(options.command, processArguments(options.chatMessage, separatorPosition), options)
-      if (commandActions) {
-        return [{
-          topic: commandActions.topic,
-          payload: commandActions.payload
-        }]
-      }
+      if (commandActions) return commandActions
     } else if (options.externalCommandList.includes(options.command) && externalCommands[options.command].topic === 'incrementingResponse') {
       const args = processArguments(options.chatMessage, separatorPosition)
       const commandActions = incrementingResponse({ args, ...options }, repeaters)
@@ -71,20 +66,10 @@ export const searchForCommand = async (options, repeaters) => {
     } else if (options.externalCommandList.includes(options.command) && externalCommands[options.command].topic === 'internalRequest') {
       options.lastMessage = lastMessage[options.room.slug]
       const commandActions = await processCommand(options.command, processArguments(options.chatMessage, separatorPosition), options, hiddenCommands)
-      if (commandActions) {
-        return [{
-          topic: commandActions.topic,
-          payload: commandActions.payload
-        }]
-      }
+      if (commandActions) return commandActions
     } else if (options.externalCommandList.includes(options.command)) {
       const commandActions = processExternalCommand(externalCommands[options.command], processArguments(options.chatMessage, separatorPosition))
-      if (commandActions) {
-        return [{
-          topic: commandActions.topic,
-          payload: commandActions.payload
-        }]
-      }
+      if (commandActions) return commandActions
     } else {
       return [{
         topic: 'responseRead',
