@@ -1,4 +1,4 @@
-import { getRandomIntInclusive } from '../libs/utils.js'
+import { logger, metrics, getRandom } from '@whatagoodbot/utilities'
 
 export const responses = [
   'It is certain.',
@@ -24,12 +24,15 @@ export const responses = [
 ]
 
 export default () => {
-  const responseIndex = getRandomIntInclusive(0, responses.length - 1)
+  const functionName = 'magic8ball'
+  logger.debug({ event: functionName })
+  metrics.count(functionName)
 
-  return {
+  const message = getRandom.fromArray(responses)
+  return [{
     topic: 'broadcast',
     payload: {
-      message: responses[responseIndex]
+      message
     }
-  }
+  }]
 }

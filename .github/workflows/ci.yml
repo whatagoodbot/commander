@@ -40,4 +40,4 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: whatagoodbot/commander:latest,whatagoodbot/commander:3.1.5
+          tags: whatagoodbot/service-command-reader:4.0.0
