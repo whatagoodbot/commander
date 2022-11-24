@@ -1,45 +1,44 @@
-export default (options) => {
+import { clients } from '@whatagoodbot/rpc'
+import { logger, metrics } from '@whatagoodbot/utilities'
+
+export default async options => {
+  const functionName = 'alias'
+  logger.debug({ event: functionName })
+  metrics.count(functionName)
+
   if (options.args) {
     const key = options.args.shift()
-    const type = options.client === 'goodbot-ttl' ? options.args.shift() : 'text'
     const value = options.args.join(' ')
+    if (key && value) {
+      if (options.internalCommandList.includes(key) || options.externalCommandList.includes(key)) {
+        const response = await clients.strings.get('aliasConflict')
+        logger.debug({ event: functionName, method: 'aliasConflict', key })
+        return [{
+          topic: 'broadcast',
+          payload: {
+            message: response.value
+          }
+        }]
+      }
 
-    if (options.internalCommandList.includes(key) || options.externalCommandList.includes(key)) {
-      return [{
-        topic: 'responseRead',
-        payload: {
-          category: 'system',
-          key: 'aliasConflict'
-        }
-      }]
-    }
-
-    if (['image', 'text'].includes(type) && key && value) {
+      logger.debug({ event: functionName })
+      metrics.count(functionName)
       return [{
         topic: 'responseAdd',
         payload: {
           key,
-          type,
           value,
           category: 'general'
         }
       }]
-    } else {
-      return [{
-        topic: 'responseRead',
-        payload: {
-          category: 'system',
-          key: 'aliasError'
-        }
-      }]
     }
-  } else {
-    return [{
-      topic: 'responseRead',
-      payload: {
-        category: 'system',
-        key: 'aliasError'
-      }
-    }]
   }
+  const response = await clients.strings.get('aliasError')
+  logger.error({ event: functionName })
+  return [{
+    topic: 'broadcast',
+    payload: {
+      message: response.value
+    }
+  }]
 }

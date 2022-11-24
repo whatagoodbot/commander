@@ -1,6 +1,6 @@
 {
   "name": "service-command-reader",
-  "version": "3.1.6",
+  "version": "4.0.0",
   "description": "",
   "main": "index.js",
   "type": "module",
@@ -38,12 +38,8 @@
     "standard": "^17.0.0"
   },
   "dependencies": {
-    "@whatagoodbot/mqtt": "^3.0.10",
-    "hot-shots": "^9.2.0",
-    "knex": "^2.3.0",
-    "mysql": "^2.18.1",
-    "node-fetch": "^3.2.10",
-    "winston": "^3.8.2",
-    "winston-syslog": "^2.6.0"
+    "@whatagoodbot/mqtt": "^4.0.0",
+    "@whatagoodbot/rpc": "^2.0.0",
+    "@whatagoodbot/utilities": "^1.0.0"
   }
 }

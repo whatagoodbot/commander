@@ -1,11 +1,17 @@
-export default (options) => {
+import { clients } from '@whatagoodbot/rpc'
+import { logger, metrics } from '@whatagoodbot/utilities'
+
+export default async options => {
+  const functionName = 'help'
+  logger.debug({ event: functionName })
+  metrics.count(functionName)
+
   const commandList = options.internalCommandList.concat(options.externalCommandList).sort()
+  const intro = await clients.strings.get('helpIntro')
   return [{
-    topic: 'responseRead',
+    topic: 'broadcast',
     payload: {
-      key: 'helpIntro',
-      category: 'system',
-      suffix: commandList.join(', ')
+      message: `${intro.value} ${commandList.join(', ')}`
     }
   }]
 }
